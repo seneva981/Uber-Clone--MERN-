@@ -42,4 +42,5 @@ router.post("/login", [
 
 router.get("/profile", authMiddleware.authCaptian, captianController.getCaptianProfile);
 
+router.get("/logout", authMiddleware.authCaptian, captianController.logoutCaptian);
 module.exports = router;
