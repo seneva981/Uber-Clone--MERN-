@@ -45,3 +45,7 @@ module.exports.loginCaptian = async (req, res, next) => {
   res.cookie("token", token);
   res.status(200).json({ token, captian });
 }
+
+module.exports.getCaptianProfile = async (req, res, next) => {
+  res.status(200).json({ captian: req.captian });
+}

@@ -2,6 +2,7 @@ const captianController = require("../controllers/captian.controller");
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 router.post(
   "/register",
@@ -38,5 +39,7 @@ router.post("/login", [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
 ], captianController.loginCaptian);
+
+router.get("/profile", authMiddleware.authCaptian, captianController.getCaptianProfile);
 
 module.exports = router;
