@@ -1,20 +1,20 @@
-const captianModel = require("../models/captian.model");
-const captianService = require("../services/captian.service");
+const captainModel = require("../models/captain.model");
+const captainService = require("../services/captain.service");
 const blacklistTokenModel = require("../models/blacklistToken.model");
 const { validationResult } = require("express-validator");
 
-module.exports.registerCaptian = async (req, res, next) => {
+module.exports.registercaptain = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   const { fullname, email, password, vehicle } = req.body;
-  const isCaptianAlreadyExist = await captianModel.findOne({ email });
-  if (isCaptianAlreadyExist) {
-    return res.status(400).json({ message: "Captian already exists" });
+  const iscaptainAlreadyExist = await captainModel.findOne({ email });
+  if (iscaptainAlreadyExist) {
+    return res.status(400).json({ message: "captain already exists" });
   }
-  const hashedPassword = await captianModel.hashPassword(password);
-  const captian = await captianService.createCaptian({
+  const hashedPassword = await captainModel.hashPassword(password);
+  const captain = await captainService.createcaptain({
     firstname: fullname.firstname,
     lastname: fullname.lastname,
     email,
@@ -24,34 +24,34 @@ module.exports.registerCaptian = async (req, res, next) => {
     capacity: vehicle.capacity,
     vehicleType: vehicle.vehicleType,
   });
-  const token = captian.generateAuthToken();
-  res.status(201).json({ token, captian });
+  const token = captain.generateAuthToken();
+  res.status(201).json({ token, captain });
 };
 
-module.exports.loginCaptian = async (req, res, next) => {
+module.exports.logincaptain = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   const { email, password } = req.body;
-  const captian = await captianModel.findOne({ email }).select("+password");
-  if (!captian) {
+  const captain = await captainModel.findOne({ email }).select("+password");
+  if (!captain) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
-  const isMatch = await captian.comparePassword(password);
+  const isMatch = await captain.comparePassword(password);
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid email or password" });
   }
-  const token = captian.generateAuthToken();
+  const token = captain.generateAuthToken();
   res.cookie("token", token);
-  res.status(200).json({ token, captian });
+  res.status(200).json({ token, captain });
 }
 
-module.exports.getCaptianProfile = async (req, res, next) => {
-  res.status(200).json({ captian: req.captian });
+module.exports.getcaptainProfile = async (req, res, next) => {
+  res.status(200).json({ captain: req.captain });
 }
 
-module.exports.logoutCaptian = async (req, res, next) => {
+module.exports.logoutcaptain = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   await blacklistTokenModel.create({ token });
   res.clearCookie("token");

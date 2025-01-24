@@ -1,6 +1,6 @@
-const captianModel = require("../models/captian.model");
+const captainModel = require("../models/captain.model");
 
-module.exports.createCaptian = async ({
+module.exports.createcaptain = async ({
   firstname,
   lastname,
   email,
@@ -22,7 +22,7 @@ module.exports.createCaptian = async ({
   ) {
     throw new Error("All fields are required");
   }
-  const captian = captianModel.create({
+  const captain = captainModel.create({
     fullname: {
       firstname,
       lastname,
@@ -36,5 +36,5 @@ module.exports.createCaptian = async ({
       vehicleType,
     },
   });
-  return captian;
+  return captain;
 };
